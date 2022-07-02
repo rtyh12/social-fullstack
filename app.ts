@@ -1,26 +1,16 @@
-import express, { Request, Response, NextFunction } from 'express';
-import { getHeapCodeStatistics } from 'v8';
+import express, { Request, Response } from 'express';
 
-const { Client } = require('pg');
+const { Pool } = require('pg');
 require('dotenv').config();
 
-const client = new Client({
+const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
     }
 });
 
-client.connect();
-
-// client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
-//     if (err) throw err;
-//     for (let row of res.rows) {
-//         console.log(JSON.stringify(row));
-//     }
-//     client.end();
-// });
-
+pool.connect();
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -29,19 +19,25 @@ app.listen(port, () => {
     console.log(`running on port ${port}`);
 });
 
-function getPosts(request: Request, response: Response): void {
+app.get('/timeline', function getPosts(req: Request, res: Response): void {
     const posts = [
         { id: 0, author: "Me", content: "Hello this is a post" },
         { id: 0, author: "Obama", content: "Hello this is also a post" },
     ]
 
-    response.status(200).json(posts);
-}
+    res.status(200).json(posts);
+});
 
-function test(): void {
-    console.log(process.env.DATABASE_URL)
-    // console.log(pool.query('SELECT table_schema,table_name FROM information_schema.tables;'))
-}
+app.get('/test', function (req: Request, res: Response): void {
+    var r = pool
+        .query('SELECT author FROM posts;')
+        .then(res => console.log(res.rows))
+        .catch(err => console.error('Error executing query', err.stack));
 
-app.get('/timeline', getPosts);
-app.get('/test', test);
+    res.status(200).send('this text is useless. ignore pls');
+});
+
+app.post('/', function (req, res) {
+    console.log('POST');
+    res.send('POST request to homepage')
+})
