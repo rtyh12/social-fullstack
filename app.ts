@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
-var bodyParser = require('body-parser')
-
+import path = require('path');
+import bodyParser = require('body-parser')
 const { Pool } = require('pg');
 require('dotenv').config();
 
@@ -14,24 +14,18 @@ const pool = new Pool({
 pool.connect();
 
 const app = express();
+// for the POST requests
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(express.static(__dirname + '/client/public'));
 const port = process.env.PORT || 3000;
+const apiUrlRoot = "/api";
 
 app.listen(port, () => {
     console.log(`running on port ${port}`);
 });
 
-// app.get('/timeline', function getPosts(req: Request, res: Response): void {
-//     const posts = [
-//         { id: 0, author: "Me", content: "Hello this is a post" },
-//         { id: 0, author: "Obama", content: "Hello this is also a post" },
-//     ]
-
-//     res.status(200).json(posts);
-// });
-
-app.get('/timeline', function (req: Request, res: Response): void {
+app.get(`${apiUrlRoot}/timeline`, function (req: Request, res: Response): void {
     pool
         .query('SELECT * FROM posts;')
         .then(function (response): void {
@@ -40,7 +34,7 @@ app.get('/timeline', function (req: Request, res: Response): void {
         .catch(err => console.error('Error executing query', err.stack));
 });
 
-app.post('/newpost', function (req: Request, res: Response): void {
+app.post(`${apiUrlRoot}/newpost`, function (req: Request, res: Response): void {
     var author: string = req.body.author;
     var content: string = req.body.content;
     
@@ -52,7 +46,6 @@ app.post('/newpost', function (req: Request, res: Response): void {
 
     console.log();
     
-    
     pool
         .query(`INSERT INTO posts (author, content) values ('${author}', '${content}');`)
         .then(function (response): void {
@@ -63,7 +56,6 @@ app.post('/newpost', function (req: Request, res: Response): void {
         .catch(err => console.error('Error executing query', err.stack));
 });
 
-app.post('/', function (req: Request, res: Response): void {
-    console.log('POST');
-    res.send('POST request to homepage')
+app.get('/', function (req: Request, res: Response): void {
+    res.sendFile(path.join(__dirname,'public/index.html'));
 })
