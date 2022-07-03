@@ -8,6 +8,7 @@
         "serve": "nodemon app.ts",
         "start": "node app.js",
         "build": "tsc",
+        "preinstall": "cd client && npm i",
         "postinstall": "npm run build"
     },
     "author": "",
