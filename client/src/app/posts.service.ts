@@ -3,6 +3,7 @@ import { Post } from './post';
 // import { mockPosts } from './mock-posts';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -10,9 +11,7 @@ import { Observable, of } from 'rxjs';
 export class PostsService {
     constructor(private http: HttpClient) { }
 
-    private apiUrlRoot = "api";
-
     fetch(): Observable<Post[]> {
-        return this.http.get<Post[]>(this.apiUrlRoot + '/timeline');
+        return this.http.get<Post[]>(environment.apiUrl + 'timeline');
     }
 }

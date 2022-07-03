@@ -18,6 +18,10 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/client/public'));
+if (process.env.NODE_ENV == 'development') {
+    const cors = require('cors');
+    app.use(cors);
+}
 const port = process.env.PORT || 3000;
 const apiUrlRoot = "/api";
 
