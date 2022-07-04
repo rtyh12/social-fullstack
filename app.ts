@@ -18,10 +18,6 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/client/public'));
-if (process.env.NODE_ENV == 'development') {
-    const cors = require('cors');
-    app.use(cors);
-}
 const port = process.env.PORT || 3000;
 const apiUrlRoot = "/api";
 
@@ -41,7 +37,7 @@ app.get(`${apiUrlRoot}/timeline`, function (req: Request, res: Response): void {
 app.post(`${apiUrlRoot}/newpost`, function (req: Request, res: Response): void {
     var author: string = req.body.author;
     var content: string = req.body.content;
-    
+
     if (!author || !content) {
         console.log('Received invalid request to /newpost');
         res.status(400).send('no');
@@ -49,7 +45,7 @@ app.post(`${apiUrlRoot}/newpost`, function (req: Request, res: Response): void {
     }
 
     console.log();
-    
+
     pool
         .query(`INSERT INTO posts (author, content) values ('${author}', '${content}');`)
         .then(function (response): void {
@@ -61,5 +57,5 @@ app.post(`${apiUrlRoot}/newpost`, function (req: Request, res: Response): void {
 });
 
 app.get('/', function (req: Request, res: Response): void {
-    res.sendFile(path.join(__dirname,'public/index.html'));
+    res.sendFile(path.join(__dirname, 'public/index.html'));
 })
