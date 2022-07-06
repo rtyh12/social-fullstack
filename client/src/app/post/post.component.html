@@ -1,3 +1,21 @@
-<div *ngIf="post">
-    {{ post.author }} says: {{ post.content }}
+<div class="post" *ngIf="post" [ngClass]="{'test': last}">
+    <div class="header-container">
+        <img class="profilepic" src="./assets/profilepic.jpg">
+
+        <div class="author-date-container">
+            <div class="author-container">
+                <span class="author-name">{{ post.author }}</span>
+                <span class="author-username">@{{ post.author | lowercase }}</span>
+            </div>
+            
+            <span class="date">3h</span>
+        </div>
+    </div>
+
+    <div class="content">{{ post.content }}</div>
+
+    <div class="buttons">
+        <span class="button">like</span>
+        <span class="button">comment</span>
+    </div>
 </div>

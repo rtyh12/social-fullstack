@@ -1,4 +1,4 @@
-<div *ngFor="let post of posts">
-    <app-post [post]="post"></app-post>
+<div *ngFor="let post of posts; let test = last">
+    <app-post [post]="post" [last]="test"></app-post>
     <!-- {{ post.author }} says: {{ post.content }} -->
 </div>

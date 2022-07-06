@@ -1,15 +1,11 @@
-<form [formGroup]="newPostForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
     <div>
-        <label for="author">
-            Author
-        </label>
+        <label for="author">Author</label>
         <input id="author" type="text" formControlName="author">
     </div>
 
     <div>
-        <label for="content">
-            Content
-        </label>
+        <label for="content">Content</label>
         <input id="content" type="text" formControlName="content">
     </div>
 

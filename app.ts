@@ -44,7 +44,7 @@ app.post(`${apiUrlRoot}/newpost`, function (req: Request, res: Response): void {
         return;
     }
 
-    console.log();
+    console.log('POST');
 
     pool
         .query(`INSERT INTO posts (author, content) values ('${author}', '${content}');`)
