@@ -4,11 +4,24 @@ import bodyParser = require('body-parser')
 const { Pool } = require('pg');
 require('dotenv').config();
 
+// passwords
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
     }
+});
+
+let hashed;
+bcrypt.hash('hunter2', saltRounds, function(err, hash) {
+    hashed = hash;
+    bcrypt.compare('hunter2', hashed, function(err, result) {
+        console.log(result);
+    });
+    console.log(hash);
 });
 
 pool.connect();
@@ -26,8 +39,13 @@ app.listen(port, () => {
 });
 
 app.get(`${apiUrlRoot}/timeline`, function (req: Request, res: Response): void {
+    // "Do not use pool.query if you need transactional integrity"
+    // is it important?
     pool
-        .query('SELECT * FROM posts;')
+        .query(`SELECT posts.*, users.username
+                FROM posts
+                JOIN users
+                ON author_id=user_id;`)
         .then(function (response): void {
             res.status(200).send(response.rows);
         })
@@ -44,13 +62,19 @@ app.post(`${apiUrlRoot}/newpost`, function (req: Request, res: Response): void {
         return;
     }
 
-    console.log('POST');
-
     pool
-        .query(`INSERT INTO posts (author, content) values ('${author}', '${content}');`)
+        .query(`INSERT INTO posts (
+                    author_id,
+                    content,
+                    created_on,
+                    last_edit
+                ) values (
+                    0,
+                    '${content}',
+                    NOW(),
+                    NOW()
+                );`)
         .then(function (response): void {
-            console.log('Ran query: --');
-            console.log(`INSERT INTO posts (author, content) values ('${author}', '${content}');`);
             res.status(200).send('ok');
         })
         .catch(err => console.error('Error executing query', err.stack));

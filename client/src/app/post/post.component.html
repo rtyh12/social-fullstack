@@ -4,11 +4,11 @@
 
         <div class="author-date-container">
             <div class="author-container">
-                <span class="author-name">{{ post.author }}</span>
-                <span class="author-username">@{{ post.author | lowercase }}</span>
+                <span class="author-name">{{ post.username }}</span>
+                <span class="author-username">@{{ post.username }}</span>
             </div>
             
-            <span class="date">3h</span>
+            <span class="date">{{ createdTimeAgo() }}</span>
         </div>
     </div>
 

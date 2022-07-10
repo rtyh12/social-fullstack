@@ -8,6 +8,7 @@ import { TimelineComponent } from './timeline/timeline.component';
 import { NewPostFormComponent } from './new-post-form/new-post-form.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { NavbarComponent } from './navbar/navbar.component';
 
 @NgModule({
     declarations: [
@@ -15,6 +16,7 @@ import { HttpClientModule } from '@angular/common/http';
         PostComponent,
         TimelineComponent,
         NewPostFormComponent,
+        NavbarComponent,
     ],
     imports: [
         BrowserModule,

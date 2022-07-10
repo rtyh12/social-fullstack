@@ -1,0 +1,15 @@
+create table users (
+    user_id serial primary key,
+    username varchar(50) unique not null,
+    hashed_passwd char(60) not null,
+    created_on timestamp not null,
+    last_login timestamp
+);
+
+create table posts (
+    post_id serial primary key,
+    author_id integer,
+    content text,
+    created_on timestamp not null,
+    last_edit timestamp
+);

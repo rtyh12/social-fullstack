@@ -1,0 +1,17 @@
+#navbar {
+    width: 100vw;
+    background-color: rgb(255, 255, 255);
+    border-bottom: 1px rgb(226, 226, 226) solid;
+    font-size: 1.5em;
+    // height: 1.5em;
+    padding: 0.35em 1.3em 0em;
+    // margin-bottom: 1rem;
+    display: flex;
+    box-sizing: border-box;
+    position: fixed;
+    gap: 1em;
+}
+
+#logo {
+    flex-grow: 1;
+}

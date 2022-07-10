@@ -34,15 +34,6 @@ export class NewPostFormComponent {
 	onSubmit(): void {
 		let value = this.formGroup.value;
 
-		// this.http.post(
-		// 	`api/newpost`,
-		// 	// `${environment.apiUrl}/newpost`,
-		// 	{
-		// 		author: value.author,
-		// 		content: value.content
-		// 	}
-		// );
-
 		this.http.post(
 			'api/newpost',
 			{
