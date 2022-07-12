@@ -44,10 +44,9 @@ app.get(`${apiUrlRoot}/timeline`, function (req: Request, res: Response): void {
 });
 
 app.post(`${apiUrlRoot}/newpost`, function (req: Request, res: Response): void {
-    var author: string = req.body.author;
     var content: string = req.body.content;
 
-    if (!author || !content) {
+    if (!content) {
         console.log(`Received invalid request to ${apiUrlRoot}/newpost:`);
         console.log(req);
         res.status(400).send('no');
