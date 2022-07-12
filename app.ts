@@ -48,7 +48,8 @@ app.post(`${apiUrlRoot}/newpost`, function (req: Request, res: Response): void {
     var content: string = req.body.content;
 
     if (!author || !content) {
-        console.log('Received invalid request to /newpost');
+        console.log(`Received invalid request to ${apiUrlRoot}/newpost:`);
+        console.log(req);
         res.status(400).send('no');
         return;
     }
