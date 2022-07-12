@@ -1,17 +1,22 @@
 #navbar {
     width: 100vw;
-    background-color: rgb(255, 255, 255);
+    background-color: rgba(242, 242, 242, 0.759);
     border-bottom: 1px rgb(226, 226, 226) solid;
     font-size: 1.5em;
-    // height: 1.5em;
     padding: 0.35em 1.3em 0em;
-    // margin-bottom: 1rem;
     display: flex;
     box-sizing: border-box;
     position: fixed;
     gap: 1em;
+    backdrop-filter: blur(10px);
 }
 
 #logo {
     flex-grow: 1;
+}
+
+#navbar-dummy {
+    width: 90vw;
+    height: 8em;
+    box-sizing: border-box;
 }

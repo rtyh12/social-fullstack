@@ -1,0 +1,21 @@
+<div id="login-background"></div>
+
+<div id="login-container">
+    <div id="login-title">Welcome</div>
+    
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+        <div>
+            <label for="username">Username</label>
+            <input id="username" type="text" formControlName="username">
+        </div>
+
+        <div>
+            <label for="password">Password</label>
+            <input id="password" type="password" formControlName="password">
+        </div>
+
+        <button id="login-button" class="button" type="submit">Sign in</button>
+
+        <div><a href="login" onclick="alert('i forgor to implement this 💀')">forgor 💀 password</a></div>
+    </form>
+</div>

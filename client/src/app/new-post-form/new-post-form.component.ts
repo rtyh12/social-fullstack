@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Observable, ObservableInput, of } from 'rxjs';
-import { environment } from '../../environments/environment';
-import { catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -12,12 +10,7 @@ import { catchError } from 'rxjs/operators';
 	styleUrls: ['./new-post-form.component.scss']
 })
 export class NewPostFormComponent {
-	// newPostForm = this.formBuilder.group({
-	// 	author: '',
-	// 	content: ''
-	// });
 	constructor(
-		private formBuilder: FormBuilder,
 		private http: HttpClient
 	) { }
 
@@ -27,7 +20,6 @@ export class NewPostFormComponent {
 	}
 
 	formGroup = new FormGroup({
-		author: new FormControl(''),
 		content: new FormControl(''),
 	});
 
@@ -37,7 +29,6 @@ export class NewPostFormComponent {
 		this.http.post(
 			'api/newpost',
 			{
-				author: value.author,
 				content: value.content
 			})
 			.subscribe({

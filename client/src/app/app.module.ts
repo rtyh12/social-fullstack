@@ -8,7 +8,10 @@ import { TimelineComponent } from './timeline/timeline.component';
 import { NewPostFormComponent } from './new-post-form/new-post-form.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar.component';
+import { LoginFormComponent } from './login-form/login-form.component';
+import { TimelinePageComponent } from './timeline-page/timeline-page.component';
 
 @NgModule({
     declarations: [
@@ -17,13 +20,20 @@ import { NavbarComponent } from './navbar/navbar.component';
         TimelineComponent,
         NewPostFormComponent,
         NavbarComponent,
+        LoginFormComponent,
+        TimelinePageComponent,
     ],
     imports: [
         BrowserModule,
         AppRoutingModule,
         HttpClientModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        RouterModule.forRoot([
+            { path: '', component: TimelinePageComponent },
+            { path: 'login', component: LoginFormComponent }
+            // { path: 'products/:productId', component: ProductDetailsComponent },
+        ])
     ],
     providers: [],
     bootstrap: [AppComponent]

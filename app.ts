@@ -14,16 +14,6 @@ const pool = new Pool({
         rejectUnauthorized: false
     }
 });
-
-let hashed;
-bcrypt.hash('hunter2', saltRounds, function(err, hash) {
-    hashed = hash;
-    bcrypt.compare('hunter2', hashed, function(err, result) {
-        console.log(result);
-    });
-    console.log(hash);
-});
-
 pool.connect();
 
 const app = express();
@@ -45,7 +35,8 @@ app.get(`${apiUrlRoot}/timeline`, function (req: Request, res: Response): void {
         .query(`SELECT posts.*, users.username
                 FROM posts
                 JOIN users
-                ON author_id=user_id;`)
+                ON author_id=user_id
+                ORDER BY created_on DESC;`)
         .then(function (response): void {
             res.status(200).send(response.rows);
         })
@@ -82,4 +73,40 @@ app.post(`${apiUrlRoot}/newpost`, function (req: Request, res: Response): void {
 
 app.get('/', function (req: Request, res: Response): void {
     res.sendFile(path.join(__dirname, 'public/index.html'));
-})
+});
+
+app.post(`${apiUrlRoot}/get_token`, function (req: Request, res: Response): void {
+    var username: String = req.body.username;
+    var password: String = req.body.password;
+
+    pool
+        .query(
+            `SELECT hashed_passwd
+             FROM users
+             WHERE username='${username}';`
+        )
+        .then(function (response): void {
+            if (response.rows.length == 0) {
+                res.status(401).send({
+                    correct: false
+                });
+                return;
+            }
+            let hash = response.rows[0]['hashed_passwd'];
+            console.log(response.rows[0]);
+
+            bcrypt.compare(password, hash, function (err, result) {
+                if (result) {
+                    res.status(200).send({
+                        correct: true
+                    });
+                }
+                else {
+                    res.status(401).send({
+                        correct: false
+                    });
+                }
+            });
+        })
+        .catch(err => console.error('Error executing query', err.stack));
+});
