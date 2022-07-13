@@ -5,36 +5,31 @@ const saltRounds = 10;
 
 const router = require('express').Router();
 
-router.post(`/get_token`, function (req: Request, res: Response): void {
-    var username: String = req.body.username;
-    var password: String = req.body.password;
-
+router.post(`/get_token`, (req: Request, res: Response): void => {
     pool
+        // Get hash of the user's password from the database
         .query(
             `SELECT hashed_passwd
             FROM users
-            WHERE username='${username}';`
+            WHERE username='${req.body.username}';`
         )
-        .then(function (response): void {
+        .then((response): void => {
+            // If no user with this name exists
             if (response.rows.length == 0) {
-                res.status(401).send({
-                    correct: false
-                });
+                res.status(401).send({ correct: false });
                 return;
             }
-            let hash = response.rows[0]['hashed_passwd'];
-            console.log(response.rows[0]);
 
-            bcrypt.compare(password, hash, function (err, result) {
-                if (result) {
+            // User exists, check password against hash
+            let hash = response.rows[0]['hashed_passwd'];
+            bcrypt.compare(req.body.password, hash, function (err, matches_hash) {
+                if (matches_hash) {
                     res.status(200).send({
                         correct: true
                     });
                 }
                 else {
-                    res.status(401).send({
-                        correct: false
-                    });
+                    res.status(401).send({ correct: false });
                 }
             });
         })
