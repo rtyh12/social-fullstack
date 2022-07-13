@@ -21,7 +21,7 @@ export class LoginFormComponent implements OnInit {
         let value = this.formGroup.value;
 
 		this.http.post(
-			'api/get_token',
+			'api/auth/get_token',
 			{
 				username: value.username,
 				password: value.password
