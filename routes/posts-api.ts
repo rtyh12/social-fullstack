@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import path = require('path');
 import { pool } from "../shared";
+import { isAuthorized } from '../is_authorized';
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
@@ -11,6 +12,7 @@ router.get(`/hi`, function (req: Request, res: Response): void {
 });
 
 router.get(`/timeline`, function (req: Request, res: Response): void {
+    console.log(req.cookies);
     // "Do not use pool.query if you need transactional integrity"
     // is it important?
     pool
@@ -27,6 +29,11 @@ router.get(`/timeline`, function (req: Request, res: Response): void {
 
 router.post(`/newpost`, function (req: Request, res: Response): void {
     var content: string = req.body.content;
+
+    if (!isAuthorized(req.cookies['access-token'], 'newpost')) {
+        res.status(401).send();
+        return;
+    }
 
     if (!content) {
         console.log(`Received invalid request to $/newpost:`);
@@ -48,7 +55,7 @@ router.post(`/newpost`, function (req: Request, res: Response): void {
                 NOW()
             );`)
         .then(function (response): void {
-            res.status(200).send('ok');
+            res.status(200).send();
         })
         .catch(err => console.error('Error executing query', err.stack));
 });

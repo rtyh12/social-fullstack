@@ -32,11 +32,9 @@ export class NewPostFormComponent {
 				content: value.content
 			})
 			.subscribe({
-				next: event => {
-					console.log(event);
-				},
+				next: event => {},
 				error: error => console.log(error),
-				complete: () => console.log('complete'),
+				complete: () => {},
 			});
 
 		this.formGroup.reset();

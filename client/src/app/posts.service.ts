@@ -12,6 +12,9 @@ export class PostsService {
     constructor(private http: HttpClient) { }
 
     fetch(): Observable<Post[]> {
-        return this.http.get<Post[]>(environment.apiUrl + 'timeline');
+        return this.http.get<Post[]>(
+            environment.apiUrl + 'timeline',
+            { withCredentials: true }
+        );
     }
 }

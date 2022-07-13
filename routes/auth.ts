@@ -31,7 +31,7 @@ router.post(`/get_token`, (req: Request, res: Response): void => {
                     var token = jwt.sign(
                         { user: req.body.username },
                         'private-key',
-                        { expiresIn: '1h' }
+                        { expiresIn: '30s' }
                     );
                     console.log(token);
                     res.cookie('access-token', token, { httpOnly: true });

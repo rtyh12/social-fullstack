@@ -24,12 +24,12 @@ export class LoginFormComponent implements OnInit {
 			.post(
 				'api/auth/get_token',
 				{ username: value.username, password: value.password },
-				{ responseType: 'text' }
+				{ responseType: 'text' },
 			)
 			.subscribe({
-				next: event => {},
+				next: event => { },
 				error: error => console.log(error),
-				complete: () => {},
+				complete: () => { },
 			});
 
 		this.formGroup.reset();
