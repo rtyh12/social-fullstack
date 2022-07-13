@@ -10,9 +10,10 @@ app.use(express.static(__dirname + '/client/public'));
 const port = process.env.PORT || 3000;
 
 // const 
-var router = require('./routes/posts-api')
-app.use(router);
-// routes.use('')
+var router = require('./routes/posts-api');
+var auth = require('./routes/auth');
+app.use('/api', router);
+app.use('/api/auth', auth);
 
 app.listen(port, () => {
     console.log(`running on port ${port}`);

@@ -1,12 +1,16 @@
 import { Request, Response } from 'express';
 import path = require('path');
-import { apiUrlRoot, pool } from "../shared";
+import { pool } from "../shared";
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 const router = require('express').Router();
 
-router.get(`${apiUrlRoot}/timeline`, function (req: Request, res: Response): void {
+router.get(`/hi`, function (req: Request, res: Response): void {
+    res.status(200).send('posts');
+});
+
+router.get(`/timeline`, function (req: Request, res: Response): void {
     // "Do not use pool.query if you need transactional integrity"
     // is it important?
     pool
@@ -21,11 +25,11 @@ router.get(`${apiUrlRoot}/timeline`, function (req: Request, res: Response): voi
         .catch(err => console.error('Error executing query', err.stack));
 });
 
-router.post(`${apiUrlRoot}/newpost`, function (req: Request, res: Response): void {
+router.post(`/newpost`, function (req: Request, res: Response): void {
     var content: string = req.body.content;
 
     if (!content) {
-        console.log(`Received invalid request to ${apiUrlRoot}/newpost:`);
+        console.log(`Received invalid request to $/newpost:`);
         console.log(req);
         res.status(400).send('no');
         return;
@@ -49,11 +53,7 @@ router.post(`${apiUrlRoot}/newpost`, function (req: Request, res: Response): voi
         .catch(err => console.error('Error executing query', err.stack));
 });
 
-router.get(`dsfsfdf`, function (req: Request, res: Response): void {
-    res.sendFile(path.join(__dirname, 'public/index.html'));
-});
-
-router.post(`${apiUrlRoot}/get_token`, function (req: Request, res: Response): void {
+router.post(`/get_token`, function (req: Request, res: Response): void {
     var username: String = req.body.username;
     var password: String = req.body.password;
 
