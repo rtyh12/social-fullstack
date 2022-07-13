@@ -1,4 +1,4 @@
 <div class="timeline-container">
-    <app-new-post-form></app-new-post-form>
+    <app-new-post-form *ngIf="auth.loggedIn"></app-new-post-form>
     <app-timeline></app-timeline>
 </div>

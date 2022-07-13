@@ -7,11 +7,12 @@ const saltRounds = 10;
 
 const router = require('express').Router();
 
-router.get(`/hi`, function (req: Request, res: Response): void {
-    res.status(200).send('posts');
-});
-
 router.get(`/timeline`, function (req: Request, res: Response): void {
+    if (!isAuthorized(req.cookies['access-token'], 'timeline')) {
+        res.status(401).send();
+        return;
+    }
+    
     console.log(req.cookies);
     // "Do not use pool.query if you need transactional integrity"
     // is it important?
@@ -30,7 +31,7 @@ router.get(`/timeline`, function (req: Request, res: Response): void {
 router.post(`/newpost`, function (req: Request, res: Response): void {
     var content: string = req.body.content;
 
-    if (!isAuthorized(req.cookies['access-token'], 'newpost')) {
+    if (!isAuthorized(req.cookies['access-token'])) {
         res.status(401).send();
         return;
     }

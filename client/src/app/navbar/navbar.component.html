@@ -1,9 +1,11 @@
 <div id="navbar">
     <span id="logo"><a routerLink="/">hjello i am navbar</a></span>
 
-    <span><a routerLink="/login">Sign in</a></span>
-    or
-    <span><a routerLink="/signup">create account</a></span>
+    <span *ngIf="!auth.loggedIn">
+        <span><a routerLink="/login">Sign in</a></span>
+        or
+        <span><a routerLink="/signup">create account</a></span>
+    </span>
 </div>
 
 <div id="navbar-dummy"></div>

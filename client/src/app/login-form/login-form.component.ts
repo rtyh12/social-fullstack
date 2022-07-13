@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { AuthenticationService } from '../authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-login-form',
@@ -9,7 +11,9 @@ import { HttpClient } from '@angular/common/http';
 })
 export class LoginFormComponent implements OnInit {
 	constructor(
-		private http: HttpClient
+		private http: HttpClient,
+		private auth: AuthenticationService,
+		private router: Router
 	) { }
 
 	formGroup = new FormGroup({
@@ -27,9 +31,13 @@ export class LoginFormComponent implements OnInit {
 				{ responseType: 'text' },
 			)
 			.subscribe({
-				next: event => { },
+				next: event => {
+					// server says authorization was correct; token cookie should have been set
+					this.auth.loggedIn = true;
+					this.router.navigate(['/']);
+				},
 				error: error => console.log(error),
-				complete: () => { },
+				complete: () => {},
 			});
 
 		this.formGroup.reset();
