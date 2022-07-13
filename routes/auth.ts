@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { pool } from "../shared";
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+var jwt = require('jsonwebtoken');
 
 const router = require('express').Router();
 
@@ -24,9 +25,17 @@ router.post(`/get_token`, (req: Request, res: Response): void => {
             let hash = response.rows[0]['hashed_passwd'];
             bcrypt.compare(req.body.password, hash, function (err, matches_hash) {
                 if (matches_hash) {
-                    res.status(200).send({
-                        correct: true
-                    });
+                    // Send an access token
+                    // Normally, you would use access and refresh tokens.
+                    // For simplicity, I am only using access tokens for now (less secure)
+                    var token = jwt.sign(
+                        { user: req.body.username },
+                        'private-key',
+                        { expiresIn: '1h' }
+                    );
+                    console.log(token);
+                    res.cookie('access-token', token, { httpOnly: true });
+                    res.status(200).send();
                 }
                 else {
                     res.status(401).send({ correct: false });

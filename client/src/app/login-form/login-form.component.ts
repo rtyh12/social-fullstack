@@ -3,42 +3,38 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
-    selector: 'app-login-form',
-    templateUrl: './login-form.component.html',
-    styleUrls: ['./login-form.component.scss']
+	selector: 'app-login-form',
+	templateUrl: './login-form.component.html',
+	styleUrls: ['./login-form.component.scss']
 })
 export class LoginFormComponent implements OnInit {
-    constructor(
+	constructor(
 		private http: HttpClient
 	) { }
 
-    formGroup = new FormGroup({
-        username: new FormControl(''),
-        password: new FormControl(''),
-    });
+	formGroup = new FormGroup({
+		username: new FormControl(''),
+		password: new FormControl(''),
+	});
 
-    onSubmit(): void {
-        let value = this.formGroup.value;
+	onSubmit(): void {
+		let value = this.formGroup.value;
 
-		this.http.post(
-			'api/auth/get_token',
-			{
-				username: value.username,
-				password: value.password
-			})
+		this.http
+			.post(
+				'api/auth/get_token',
+				{ username: value.username, password: value.password },
+				{ responseType: 'text' }
+			)
 			.subscribe({
-				next: event => {
-					console.log(event);
-				},
+				next: event => {},
 				error: error => console.log(error),
-				complete: () => console.log('complete'),
+				complete: () => {},
 			});
 
-        console.log(value);
-
 		this.formGroup.reset();
-    }
+	}
 
-    ngOnInit(): void {
-    }
+	ngOnInit(): void {
+	}
 }
