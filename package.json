@@ -9,7 +9,7 @@
         "build": "tsc",
         "preinstall": "cd client && npm i",
         "postinstall": "npm run build",
-        "serve-frontend": "cd client && ng serve --proxy-config ../server.conf.json",
+        "serve-frontend": "cd client && ng serve",
         "serve-backend": "nodemon app.ts",
         "serve": "npm-run-all -p serve-frontend serve-backend"
     },

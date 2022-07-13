@@ -72,7 +72,8 @@
               "browserTarget": "social:build:production"
             },
             "development": {
-              "browserTarget": "social:build:development"
+              "browserTarget": "social:build:development",
+              "proxyConfig": "src/proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
