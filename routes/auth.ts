@@ -1,4 +1,5 @@
-import { Request, Response } from 'express';
+import { Request, response, Response } from 'express';
+import { isAuthorized } from '../is_authorized';
 import { pool } from "../shared";
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -12,7 +13,8 @@ router.post(`/get_token`, (req: Request, res: Response): void => {
         .query(
             `SELECT hashed_passwd
             FROM users
-            WHERE username='${req.body.username}';`
+            WHERE username=$1`,
+            [req.body.username]
         )
         .then((response): void => {
             // If no user with this name exists
@@ -45,8 +47,28 @@ router.post(`/get_token`, (req: Request, res: Response): void => {
         .catch(err => console.error('Error executing query', err.stack));
 });
 
-router.get(`/hi`, function (req: Request, res: Response): void {
-    res.status(200).send('auth');
+router.post(`/create_account`, (req: Request, res: Response): void => {
+    bcrypt.hash(req.body.password, saltRounds, function (err, hash: string) {
+        pool
+            // Attempt to insert new account into database
+            .query(
+                `INSERT INTO users(username, hashed_passwd, created_on, last_login)
+                 VALUES($1, $2), NOW(), NOW()`,
+                 [req.body.username, hash]
+            )
+            .then((response): void => {
+                res.status(201).send();
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(409).send();
+            });
+    });
+});
+
+router.get(`/check_token_valid`, function (req: Request, res: Response): void {
+    isAuthorized(req.cookies['access-token']) ? res.status(200) : res.status(401);
+    res.send();
 });
 
 module.exports = router;

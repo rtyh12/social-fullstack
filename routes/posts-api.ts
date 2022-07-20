@@ -51,10 +51,11 @@ router.post(`/newpost`, function (req: Request, res: Response): void {
                 last_edit
             ) values (
                 0,
-                '${content}',
+                $1,
                 NOW(),
                 NOW()
-            );`)
+            )`,
+            [content])
         .then(function (response): void {
             res.status(200).send();
         })
