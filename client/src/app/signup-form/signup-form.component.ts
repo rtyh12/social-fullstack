@@ -26,7 +26,7 @@ export class SignupFormComponent implements OnInit {
 
 		this.http
 			.post(
-				'api/auth/get_token',
+				'api/auth/create_account',
 				{ username: value.username, password: value.password },
 				{ responseType: 'text' },
 			)

@@ -7,6 +7,20 @@ var jwt = require('jsonwebtoken');
 
 const router = require('express').Router();
 
+const generateToken = (username: string, user_id: Number) => {
+    // Generate an access token
+    // Normally, you would use access and refresh tokens.
+    // For simplicity, I am only using access tokens for now (less secure)
+    return jwt.sign(
+        {
+            username: username,
+            user_id: user_id,
+        },
+        'private-key',
+        { expiresIn: '5min' }
+    );
+}
+
 router.post(`/get_token`, (req: Request, res: Response): void => {
     pool
         // Get hash of the user's password from the database
@@ -27,17 +41,7 @@ router.post(`/get_token`, (req: Request, res: Response): void => {
             let hash = response.rows[0]['hashed_passwd'];
             bcrypt.compare(req.body.password, hash, function (err, matches_hash) {
                 if (matches_hash) {
-                    // Send an access token
-                    // Normally, you would use access and refresh tokens.
-                    // For simplicity, I am only using access tokens for now (less secure)
-                    var token = jwt.sign(
-                        {
-                            username: req.body.username,
-                            user_id: response.rows[0]['user_id']
-                        },
-                        'private-key',
-                        { expiresIn: '5min' }
-                    );
+                    let token = generateToken(req.body.username, response.rows[0]['user_id']);
                     res.cookie('access-token', token, { httpOnly: true });
                     res.status(200).send();
                 }
@@ -55,14 +59,20 @@ router.post(`/create_account`, (req: Request, res: Response): void => {
             // Attempt to insert new account into database
             .query(
                 `INSERT INTO users(username, hashed_passwd, created_on, last_login)
-                 VALUES($1, $2), NOW(), NOW()`,
+                 VALUES($1, $2, NOW(), NOW())
+                 RETURNING *`,
                 [req.body.username, hash]
             )
             .then((response): void => {
+                console.log(response);
+                let user_id = response.rows[0].user_id;
+                let token = generateToken(req.body.username, user_id);
+                res.cookie('access-token', token, { httpOnly: true });
                 res.status(201).send();
             })
             .catch(err => {
-                console.log(err);
+                console.error("Could not create account");
+                console.error(err);
                 res.status(409).send();
             });
     });
