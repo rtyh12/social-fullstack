@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import path = require('path');
 import { pool } from "../shared";
-import { isAuthorized } from '../is_authorized';
+import { isAuthorized, userIdFromToken } from '../is_authorized';
+import { assert } from 'console';
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
@@ -12,8 +13,7 @@ router.get(`/timeline`, function (req: Request, res: Response): void {
         res.status(401).send();
         return;
     }
-    
-    console.log(req.cookies);
+
     // "Do not use pool.query if you need transactional integrity"
     // is it important?
     pool
@@ -29,17 +29,26 @@ router.get(`/timeline`, function (req: Request, res: Response): void {
 });
 
 router.post(`/newpost`, function (req: Request, res: Response): void {
-    var content: string = req.body.content;
+    const content: string = req.body.content;
 
     if (!isAuthorized(req.cookies['access-token'])) {
         res.status(401).send();
         return;
     }
 
+    const user_id = userIdFromToken(req.cookies['access-token']);
+
+    console.log(req.cookies)
+    
+    if (!user_id) {
+        console.log("Missing user_id");
+        res.status(400).send();
+        return;
+    }
+
     if (!content) {
-        console.log(`Received invalid request to $/newpost:`);
-        console.log(req);
-        res.status(400).send('no');
+        console.log("Missing content");
+        res.status(400).send();
         return;
     }
 
@@ -50,12 +59,12 @@ router.post(`/newpost`, function (req: Request, res: Response): void {
                 created_on,
                 last_edit
             ) values (
-                0,
                 $1,
+                $2,
                 NOW(),
                 NOW()
             )`,
-            [content])
+            [user_id, content])
         .then(function (response): void {
             res.status(200).send();
         })

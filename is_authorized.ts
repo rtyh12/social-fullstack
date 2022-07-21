@@ -32,3 +32,13 @@ export function isAuthorized(token: string, action: string | undefined = undefin
         return false;
     }
 }
+
+export function userIdFromToken(token: string) {
+    try {
+        var decoded = jwt.verify(token, 'private-key');
+        return decoded['user_id'];
+    }
+    catch (err) {
+        return undefined;
+    }
+}

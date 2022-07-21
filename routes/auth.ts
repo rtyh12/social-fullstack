@@ -1,5 +1,5 @@
 import { Request, response, Response } from 'express';
-import { isAuthorized } from '../is_authorized';
+import { isAuthorized, userIdFromToken } from '../is_authorized';
 import { pool } from "../shared";
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -11,7 +11,7 @@ router.post(`/get_token`, (req: Request, res: Response): void => {
     pool
         // Get hash of the user's password from the database
         .query(
-            `SELECT hashed_passwd
+            `SELECT hashed_passwd, user_id
             FROM users
             WHERE username=$1`,
             [req.body.username]
@@ -31,11 +31,13 @@ router.post(`/get_token`, (req: Request, res: Response): void => {
                     // Normally, you would use access and refresh tokens.
                     // For simplicity, I am only using access tokens for now (less secure)
                     var token = jwt.sign(
-                        { user: req.body.username },
+                        {
+                            username: req.body.username,
+                            user_id: response.rows[0]['user_id']
+                        },
                         'private-key',
-                        { expiresIn: '30s' }
+                        { expiresIn: '5min' }
                     );
-                    console.log(token);
                     res.cookie('access-token', token, { httpOnly: true });
                     res.status(200).send();
                 }
@@ -54,7 +56,7 @@ router.post(`/create_account`, (req: Request, res: Response): void => {
             .query(
                 `INSERT INTO users(username, hashed_passwd, created_on, last_login)
                  VALUES($1, $2), NOW(), NOW()`,
-                 [req.body.username, hash]
+                [req.body.username, hash]
             )
             .then((response): void => {
                 res.status(201).send();
