@@ -1,7 +1,7 @@
 <div id="login-background"></div>
 
 <div id="login-container">
-    <div id="login-title">Welcome back</div>
+    <div id="login-title">Welcome</div>
     
     <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
         <div>
@@ -14,8 +14,6 @@
             <input id="password" type="password" formControlName="password">
         </div>
 
-        <button id="login-button" class="button" type="submit">Login</button>
-
-        <div><a href="login" onclick="alert('not implemented. have some pizza instead: 🍕')">Forgot password?</a></div>
+        <button id="login-button" class="button" type="submit">Create account</button>
     </form>
 </div>

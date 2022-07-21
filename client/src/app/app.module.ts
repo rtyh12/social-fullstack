@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 import { NavbarComponent } from './navbar/navbar.component';
 import { LoginFormComponent } from './login-form/login-form.component';
 import { TimelinePageComponent } from './timeline-page/timeline-page.component';
+import { SignupFormComponent } from './signup-form/signup-form.component';
 
 @NgModule({
     declarations: [
@@ -22,6 +23,7 @@ import { TimelinePageComponent } from './timeline-page/timeline-page.component';
         NavbarComponent,
         LoginFormComponent,
         TimelinePageComponent,
+        SignupFormComponent,
     ],
     imports: [
         BrowserModule,
@@ -31,7 +33,8 @@ import { TimelinePageComponent } from './timeline-page/timeline-page.component';
         ReactiveFormsModule,
         RouterModule.forRoot([
             { path: '', component: TimelinePageComponent },
-            { path: 'login', component: LoginFormComponent }
+            { path: 'login', component: LoginFormComponent },
+            { path: 'signup', component: SignupFormComponent },
             // { path: 'products/:productId', component: ProductDetailsComponent },
         ])
     ],
